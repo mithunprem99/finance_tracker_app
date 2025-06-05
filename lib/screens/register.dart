@@ -5,6 +5,7 @@ import 'package:finance_app/widgets/custom_text_form_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -117,6 +118,7 @@ class _RegisterState extends State<Register> {
                     SizedBox(height: 30),
                     CustomButton(
                       onPressed: () async{
+                        var uuid = Uuid().v1();
                         if (_registerKey.currentState!.validate()) {
                           showDialog(
                             barrierDismissible: false,
@@ -125,7 +127,8 @@ class _RegisterState extends State<Register> {
                               return Center(child: CircularProgressIndicator());
                             },
                           );
-                          UserModels user = UserModels(
+                          UserModels user = UserModels(  
+                            id: uuid,
                             email: _emailController.text.trim(),
                             name: _nameController.text.trim(),
                             password: _passwordController.text.trim(),

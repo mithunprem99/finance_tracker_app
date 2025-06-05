@@ -39,7 +39,6 @@ class MyApp extends StatelessWidget {
           'login': (context) => const Login(),
           'register': (context) => const Register(),
           'home': (context) => const Home(),
-
         },
       ),
     );

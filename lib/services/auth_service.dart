@@ -27,20 +27,41 @@ class AuthService extends ChangeNotifier {
 
     for (var user in _userBox!.values) {
       if (user.email == email && user.password == password) {
-        await setLoggedInState(true);
+        await setLoggedInState(true,user.id);
         return user;
       }
     }
     return null;
   }
 
-  Future<void> setLoggedInState(bool isLoggedIn) async {
+  Future<void> setLoggedInState(bool isLoggedIn,String id) async {
     final pref = await SharedPreferences.getInstance();
     await pref.setBool(_loggedInKey, isLoggedIn);
+    await pref.setString('id', id);
+
   }
 
   Future <bool> isUserLoggedIN() async{
     final pref = await SharedPreferences.getInstance();
     return pref.getBool(_loggedInKey)?? false;
+  }
+
+  Future<UserModels?>getCUrrentUser()async{
+    final isCurrentUsr = await isUserLoggedIN();
+    if(isCurrentUsr ){
+      final id = await getCurrentUserID();
+      for(var user_id in _userBox!.values){
+        if(user_id == id){
+          return user_id;
+        }
+      }
+    }
+    return null;
+  }
+  
+  Future<String?> getCurrentUserID() async {
+    final prefs = await SharedPreferences.getInstance();
+    final id = await prefs.getString('id');
+    return id;
   }
 }
