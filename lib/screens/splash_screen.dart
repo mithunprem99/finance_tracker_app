@@ -1,5 +1,7 @@
 import 'package:finance_app/constants/colors.dart';
+import 'package:finance_app/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -11,12 +13,21 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    // TODO: implement initState
+    checkloginState();
     super.initState();
+  }
 
-    Future.delayed(Duration(seconds: 5), () {
+  Future<void> checkloginState() async {
+    await Future.delayed(Duration(seconds: 5));
+    final authService = Provider.of<AuthService>(context, listen: false);
+
+    final islogin = await authService.isUserLoggedIN();
+
+    if (islogin == true) {
+      Navigator.pushNamedAndRemoveUntil(context, 'home', (route) => false);
+    } else {
       Navigator.pushReplacementNamed(context, 'login');
-    });
+    }
   }
 
   @override
