@@ -6,7 +6,7 @@ class CustomTextFormFields extends StatefulWidget {
   String? hintText;
   final bool isPassword;
   final TextInputType? keyboardType;
-
+  final String? Function(String?)? validator;
   bool obscureText;
   CustomTextFormFields({
     super.key,
@@ -15,6 +15,7 @@ class CustomTextFormFields extends StatefulWidget {
     required this.obscureText,
     this.isPassword = false,
     this.keyboardType,
+    this.validator,
   });
 
   @override
@@ -40,7 +41,7 @@ class _CustomTextFormFieldsState extends State<CustomTextFormFields> {
           widget.keyboardType ??
           (widget.isPassword
               ? TextInputType.visiblePassword
-              : TextInputType.emailAddress), 
+              : TextInputType.emailAddress),
       decoration: InputDecoration(
         hintText: widget.hintText,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
@@ -65,15 +66,7 @@ class _CustomTextFormFieldsState extends State<CustomTextFormFields> {
               )
             : null,
       ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return widget.isPassword ? 'Enter password' : 'Enter email';
-        }
-        if (!widget.isPassword && !value.contains('@')) {
-          return 'Enter a valid email';
-        }
-        return null;
-      },
+      validator: widget.validator,
     );
   }
 }
