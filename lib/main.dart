@@ -1,5 +1,6 @@
 import 'package:finance_app/constants/colors.dart';
 import 'package:finance_app/screens/login.dart';
+import 'package:finance_app/screens/register.dart';
 import 'package:finance_app/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const SplashScreen(),
         'login': (context) => const Login(),
+        'register':(context) => const Register(),
       },
     );
   }

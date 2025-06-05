@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CustomTextFormFields extends StatefulWidget {
   final TextEditingController textEditingController;
   String? hintText;
   final bool isPassword;
+  final TextInputType? keyboardType;
 
   bool obscureText;
   CustomTextFormFields({
@@ -12,6 +14,7 @@ class CustomTextFormFields extends StatefulWidget {
     required this.hintText,
     required this.obscureText,
     this.isPassword = false,
+    this.keyboardType,
   });
 
   @override
@@ -24,7 +27,7 @@ class _CustomTextFormFieldsState extends State<CustomTextFormFields> {
   @override
   void initState() {
     super.initState();
-    _obscureText = widget.isPassword; // Only obscure if it's a password field
+    _obscureText = widget.isPassword;
   }
 
   @override
@@ -33,16 +36,21 @@ class _CustomTextFormFieldsState extends State<CustomTextFormFields> {
       style: Theme.of(context).textTheme.displaySmall,
       controller: widget.textEditingController,
       obscureText: _obscureText,
+      keyboardType:
+          widget.keyboardType ??
+          (widget.isPassword
+              ? TextInputType.visiblePassword
+              : TextInputType.emailAddress), 
       decoration: InputDecoration(
         hintText: widget.hintText,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.grey),
+          borderSide: BorderSide(color: Colors.white),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.blue),
+          borderSide: BorderSide(color: Colors.white),
         ),
         suffixIcon: widget.isPassword
             ? IconButton(
@@ -57,9 +65,6 @@ class _CustomTextFormFieldsState extends State<CustomTextFormFields> {
               )
             : null,
       ),
-      keyboardType: widget.isPassword
-          ? TextInputType.visiblePassword
-          : TextInputType.emailAddress,
       validator: (value) {
         if (value == null || value.isEmpty) {
           return widget.isPassword ? 'Enter password' : 'Enter email';

@@ -28,6 +28,7 @@ class _LoginState extends State<Login> {
               Image.asset('assets/images/logo.png', width: 170, height: 170),
               SizedBox(height: 20),
               CustomTextFormFields(
+                
                 textEditingController: _emailController,
                 hintText: "Enter your Email",
                 isPassword: false,
@@ -41,24 +42,29 @@ class _LoginState extends State<Login> {
                 isPassword: true,
               ),
               SizedBox(height: 30),
-              CustomButton(onPressed: () {
+              CustomButton(
+                onPressed: () {
+                  //login logic
 
-                //login logic
+                  //get user fom hive
 
-                //get user fom hive
-
-
-                //redirect user to home
-
-
-                
-              }, subject: "Login"),
+                  //redirect user to home
+                },
+                subject: "Login",
+              ),
               SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text("Dont have an account"),
-                  TextButton(onPressed: () {}, child: Text("Create Account")),
+                  InkWell(
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, 'register');
+                      },
+                      child: Text("Create Account"),
+                    ),
+                  ),
                 ],
               ),
             ],
