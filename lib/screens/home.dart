@@ -125,7 +125,7 @@ class _HomeState extends State<Home> {
                         print("tap 1");
                       },
                       onExpenseTap: () {
-                        print("tap 2");
+                        Navigator.pushNamed(context, 'addExpense');
                       },
                       incomeChild: Column(
                         mainAxisSize: MainAxisSize.min,

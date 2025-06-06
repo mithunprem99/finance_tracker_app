@@ -1,5 +1,6 @@
 import 'package:finance_app/constants/colors.dart';
 import 'package:finance_app/models/user_models.dart';
+import 'package:finance_app/screens/add_expense.dart';
 import 'package:finance_app/screens/home.dart';
 import 'package:finance_app/screens/login.dart';
 import 'package:finance_app/screens/register.dart';
@@ -39,6 +40,8 @@ class MyApp extends StatelessWidget {
           'login': (context) => const Login(),
           'register': (context) => const Register(),
           'home': (context) => const Home(),
+          // 'addExpense': (context) => const AddExmcpense(),mcbd
+
         },
       ),
     );
