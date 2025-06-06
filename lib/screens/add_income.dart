@@ -3,18 +3,18 @@ import 'package:finance_app/widgets/custom_button.dart';
 import 'package:finance_app/widgets/custom_text_form_fields.dart';
 import 'package:flutter/material.dart';
 
-class AddExpense extends StatefulWidget {
-  AddExpense({super.key});
+class AddIncome extends StatefulWidget {
+  const AddIncome({super.key});
 
   @override
-  State<AddExpense> createState() => _AddExpenseState();
+  State<AddIncome> createState() => _AddIncomeState();
 }
 
-class _AddExpenseState extends State<AddExpense> {
-  late TextEditingController descriptionController;
+class _AddIncomeState extends State<AddIncome> {
+   late TextEditingController descriptionController;
   late TextEditingController amountController;
 
-  final eCategory = expenseCategories;
+  final iCategory = incomeCategories;
   @override
   void initState() {
     super.initState();
@@ -33,7 +33,7 @@ class _AddExpenseState extends State<AddExpense> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Add Expense")),
+      appBar: AppBar(title: Text("Add Income")),
       body: Column(
         children: [
           Padding(
@@ -49,9 +49,9 @@ class _AddExpenseState extends State<AddExpense> {
               child: DropdownButton<String>(
                 isExpanded: true,
                 value: selectedCategory,
-                hint: Text("Select Expense Category"),
+                hint: Text("Select  Category"),
                 underline: SizedBox(),
-                items: eCategory.map<DropdownMenuItem<String>>((String value) {
+                items: iCategory.map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(value),
@@ -81,7 +81,7 @@ class _AddExpenseState extends State<AddExpense> {
               obscureText: false,
             ),
           ),
-          CustomButton(onPressed: () {}, subject: "Add Expense"),
+          CustomButton(onPressed: () {}, subject: "Add Income"),
         ],
       ),
     );

@@ -122,7 +122,7 @@ class _HomeState extends State<Home> {
                     ),
                     Dashboard(
                       onIncomeTap: () {
-                        print("tap 1");
+                        Navigator.pushNamed(context, 'addIncome');
                       },
                       onExpenseTap: () {
                         Navigator.pushNamed(context, 'addExpense');
