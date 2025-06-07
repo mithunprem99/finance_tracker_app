@@ -83,6 +83,10 @@ class _LoginState extends State<Login> {
                         (route) => false,
                         arguments: res,
                       );
+                    } else {
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text("No User Exist")));
                     }
 
                     //get user fom hive

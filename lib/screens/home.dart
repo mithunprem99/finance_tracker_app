@@ -1,6 +1,7 @@
 import 'package:finance_app/constants/colors.dart';
 import 'package:finance_app/models/user_models.dart';
 import 'package:finance_app/services/auth_service.dart';
+import 'package:finance_app/services/fin_service.dart';
 import 'package:finance_app/widgets/custom_divider.dart';
 import 'package:finance_app/widgets/dashboard.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -18,6 +19,8 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
+    final finService = Provider.of<FinService>(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -32,6 +35,12 @@ class _HomeState extends State<Home> {
               print(snapshot);
               final user = snapshot.data;
               print(user?.id);
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                Provider.of<FinService>(
+                  context,
+                  listen: false,
+                ).calculatetotalExpense(user!.id);
+              });
               return Container(
                 height: double.infinity,
                 width: double.infinity,
@@ -65,13 +74,22 @@ class _HomeState extends State<Home> {
                         SizedBox(width: 20),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: CircleAvatar(
-                            radius: 24,
-                            child: Text(
-                              "${user!.name[0].toUpperCase()}",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 30,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                'profile',
+                                arguments: [user.id, user.name, user.email],
+                              );
+                            },
+                            child: CircleAvatar(
+                              radius: 24,
+                              child: Text(
+                                "${user!.name[0].toUpperCase()}",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 30,
+                                ),
                               ),
                             ),
                           ),
@@ -86,10 +104,11 @@ class _HomeState extends State<Home> {
 
                     Dashboard(
                       onIncomeTap: () {
-                        print("tap 1");
+                        Navigator.pushNamed(context, 'listIncomeTransactions',arguments: finService.totalIncome);
+
                       },
                       onExpenseTap: () {
-                        print("tap 2");
+                        Navigator.pushNamed(context, 'listExpTransactions',arguments: finService.totalExpense);
                       },
                       incomeChild: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -100,7 +119,7 @@ class _HomeState extends State<Home> {
                           ),
                           SizedBox(height: 4),
                           Text(
-                            "₹12,000",
+                            "${finService.totalIncome}",
                             style: TextStyle(color: Colors.white, fontSize: 16),
                           ),
                         ],
@@ -114,7 +133,7 @@ class _HomeState extends State<Home> {
                           ),
                           SizedBox(height: 4),
                           Text(
-                            "₹3,500",
+                            "${finService.totalExpense}",
                             style: TextStyle(color: Colors.white, fontSize: 16),
                           ),
                         ],
@@ -122,10 +141,28 @@ class _HomeState extends State<Home> {
                     ),
                     Dashboard(
                       onIncomeTap: () {
-                        Navigator.pushNamed(context, 'addIncome');
+                        Navigator.pushNamed(
+                          context,
+                          'addIncome',
+                          arguments: user.id,
+                        ).then((_) {
+                          Provider.of<FinService>(
+                            context,
+                            listen: false,
+                          ).calculatetotalIncome(user.id);
+                        });
                       },
                       onExpenseTap: () {
-                        Navigator.pushNamed(context, 'addExpense');
+                        Navigator.pushNamed(
+                          context,
+                          'addExpense',
+                          arguments: user.id,
+                        ).then((_) {
+                          Provider.of<FinService>(
+                            context,
+                            listen: false,
+                          ).calculatetotalExpense(user.id);
+                        });
                       },
                       incomeChild: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -135,10 +172,6 @@ class _HomeState extends State<Home> {
                             style: TextStyle(color: Colors.white70),
                           ),
                           SizedBox(height: 4),
-                          Text(
-                            "₹12,000",
-                            style: TextStyle(color: Colors.white, fontSize: 16),
-                          ),
                         ],
                       ),
                       expenseChild: Column(
@@ -149,10 +182,6 @@ class _HomeState extends State<Home> {
                             style: TextStyle(color: Colors.white70),
                           ),
                           SizedBox(height: 4),
-                          Text(
-                            "₹3,500",
-                            style: TextStyle(color: Colors.white, fontSize: 16),
-                          ),
                         ],
                       ),
                     ),
@@ -176,14 +205,14 @@ class _HomeState extends State<Home> {
                                     titleStyle: TextStyle(color: Colors.white),
 
                                     color: chartColor1,
-                                    value: 80,
+                                    value: finService.totalExpense,
                                     title: "Expense",
                                   ),
                                   PieChartSectionData(
                                     radius: 50,
                                     titleStyle: TextStyle(color: Colors.white),
                                     color: chartColor2,
-                                    value: 50,
+                                    value: finService.totalIncome,
                                     title: "Income",
                                   ),
                                 ],

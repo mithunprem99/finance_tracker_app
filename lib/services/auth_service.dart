@@ -7,7 +7,11 @@ class AuthService extends ChangeNotifier {
   Box<UserModels>? _userBox;
   static const String _loggedInKey = '_isLoggedIn';
   Future<void> openBox() async {
-    _userBox = await Hive.openBox('user');
+    if (!Hive.isBoxOpen('user')) {
+      _userBox = await Hive.openBox<UserModels>('user');
+    } else {
+      _userBox = Hive.box<UserModels>('user');
+    }
   }
 
   Future<bool> registerUser(UserModels user) async {
@@ -45,26 +49,38 @@ class AuthService extends ChangeNotifier {
     return pref.getBool(_loggedInKey) ?? false;
   }
 
-Future<UserModels?> getCurrentUser() async {
-  final isCurrentUsr = await isUserLoggedIN();
-  if (isCurrentUsr) {
-    final id = await getCurrentUserID();
-    for (var user in _userBox!.values) {
+  Future<UserModels?> getCurrentUser() async {
+    final isCurrentUsr = await isUserLoggedIN();
+    if (isCurrentUsr) {
+      final id = await getCurrentUserID();
+      for (var user in _userBox!.values) {
         print("Checking user with id: ${user.id}");
-      if (user.id == id) {
-        print("✅ Found userId: ${user.id}");
-        return user;
+        if (user.id == id) {
+          print("✅ Found userId: ${user.id}");
+          return user;
+        }
       }
     }
+    print("❌ No matching user found");
+    return null;
   }
-  print("❌ No matching user found");
-  return null;
-}
-
 
   Future<String?> getCurrentUserID() async {
     final prefs = await SharedPreferences.getInstance();
     final id = await prefs.getString('id');
     return id;
+  }
+
+ Future<void> logOut(BuildContext context) async {
+    // await openBox(); // Ensure the box is open
+    // await _userBox!.clear(); // Clear user data
+    // notifyListeners(); // Notify listeners if needed
+Box settingsBox = await Hive.openBox('settings');
+await settingsBox.put('isLoggedIn', false); // ✅ Correct
+
+  notifyListeners();
+
+    // Navigate to login screen and remove all previous routes
+    Navigator.pushNamedAndRemoveUntil(context, 'login', (route) => false);
   }
 }

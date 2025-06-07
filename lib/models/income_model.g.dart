@@ -8,7 +8,7 @@ part of 'income_model.dart';
 
 class IncomeModelAdapter extends TypeAdapter<IncomeModel> {
   @override
-  final int typeId = 1;
+  final int typeId = 2;
 
   @override
   IncomeModel read(BinaryReader reader) {
