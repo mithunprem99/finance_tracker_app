@@ -51,6 +51,10 @@ class AuthService extends ChangeNotifier {
 
   Future<UserModels?> getCurrentUser() async {
     final isCurrentUsr = await isUserLoggedIN();
+    if (_userBox == null || !_userBox!.isOpen) {
+      await openBox();
+    }
+
     if (isCurrentUsr) {
       final id = await getCurrentUserID();
       for (var user in _userBox!.values) {
@@ -71,16 +75,10 @@ class AuthService extends ChangeNotifier {
     return id;
   }
 
- Future<void> logOut(BuildContext context) async {
-    // await openBox(); // Ensure the box is open
-    // await _userBox!.clear(); // Clear user data
-    // notifyListeners(); // Notify listeners if needed
-Box settingsBox = await Hive.openBox('settings');
-await settingsBox.put('isLoggedIn', false); // ✅ Correct
-
+Future<void> logOut() async {
+  Box settingsBox = await Hive.openBox('settings');
+  await settingsBox.put('isLoggedIn', false);
   notifyListeners();
+}
 
-    // Navigate to login screen and remove all previous routes
-    Navigator.pushNamedAndRemoveUntil(context, 'login', (route) => false);
-  }
 }

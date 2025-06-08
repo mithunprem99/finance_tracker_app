@@ -71,7 +71,7 @@ class Profile extends StatelessWidget {
                         await Provider.of<AuthService>(
                           context,
                           listen: false,
-                        ).logOut(context);
+                        ).logOut();
                         Navigator.pushReplacementNamed(context, 'login');
                       },
                       subject: "Logout",

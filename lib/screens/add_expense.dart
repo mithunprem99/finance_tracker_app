@@ -93,6 +93,7 @@ class _AddExpenseState extends State<AddExpense> {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: CustomTextFormFields(
+                 keyboardType: TextInputType.numberWithOptions(),
                  validator: (value){
                   if (value == null || value.isEmpty){
                     return "Enter amount";

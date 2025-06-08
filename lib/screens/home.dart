@@ -16,15 +16,35 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  UserModels? user;
+
+  @override
+  void initState() {
+    super.initState();
+    loadUserAndCalculate();
+  }
+
+  Future<void> loadUserAndCalculate() async {
+    final authService = Provider.of<AuthService>(context, listen: false);
+    final finService = Provider.of<FinService>(context, listen: false);
+    final currentUser = await authService.getCurrentUser();
+
+    if (currentUser != null) {
+      setState(() {
+        user = currentUser;
+      });
+      await finService.calculatetotalExpense(currentUser.id);
+      await finService.calculatetotalIncome(currentUser.id);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
     final finService = Provider.of<FinService>(context);
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      ),
+      appBar: AppBar(backgroundColor: Colors.tealAccent),
       body: FutureBuilder<UserModels?>(
         future: authService.getCurrentUser(),
         builder: (context, snapshot) {
@@ -35,12 +55,12 @@ class _HomeState extends State<Home> {
               print(snapshot);
               final user = snapshot.data;
               print(user?.id);
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                Provider.of<FinService>(
-                  context,
-                  listen: false,
-                ).calculatetotalExpense(user!.id);
-              });
+              // WidgetsBinding.instance.addPostFrameCallback((_) {
+              //   Provider.of<FinService>(
+              //     context,
+              //     listen: false,
+              //   ).calculatetotalExpense(user!.id);
+              // });
               return Container(
                 height: double.infinity,
                 width: double.infinity,
@@ -50,45 +70,53 @@ class _HomeState extends State<Home> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          child: Row(
-                            children: [
-                              Text(
-                                "Welcome!",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                ),
+                        Row(
+                          children: [
+                            const Text(
+                              "Welcome, ",
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 22,
+                                fontWeight: FontWeight.w400,
                               ),
-                              SizedBox(width: 20),
-                              Text(
-                                "${user!.name}",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 30,
-                                ),
+                            ),
+                            Text(
+                              user!.name,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 26,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1.2,
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                        SizedBox(width: 20),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.pushNamed(
-                                context,
-                                'profile',
-                                arguments: [user.id, user.name, user.email],
-                              );
-                            },
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              'profile',
+                              arguments: [user.id, user.name, user.email],
+                            );
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: Colors.deepOrange,
+                                width: 2,
+                              ),
+                            ),
                             child: CircleAvatar(
                               radius: 24,
+                              backgroundColor: Colors.white,
                               child: Text(
-                                "${user!.name[0].toUpperCase()}",
-                                style: TextStyle(
+                                user.name[0].toUpperCase(),
+                                style: const TextStyle(
+                                  color: Colors.deepOrange,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 30,
+                                  fontSize: 24,
                                 ),
                               ),
                             ),
@@ -96,6 +124,7 @@ class _HomeState extends State<Home> {
                         ),
                       ],
                     ),
+
                     CustomDivider(
                       height: 1.3,
                       color: Colors.deepOrange,
@@ -104,11 +133,18 @@ class _HomeState extends State<Home> {
 
                     Dashboard(
                       onIncomeTap: () {
-                        Navigator.pushNamed(context, 'listIncomeTransactions',arguments: finService.totalIncome);
-
+                        Navigator.pushNamed(
+                          context,
+                          'listIncomeTransactions',
+                          arguments: finService.totalIncome,
+                        );
                       },
                       onExpenseTap: () {
-                        Navigator.pushNamed(context, 'listExpTransactions',arguments: finService.totalExpense);
+                        Navigator.pushNamed(
+                          context,
+                          'listExpTransactions',
+                          arguments: finService.totalExpense,
+                        );
                       },
                       incomeChild: Column(
                         mainAxisSize: MainAxisSize.min,

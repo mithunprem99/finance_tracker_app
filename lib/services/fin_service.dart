@@ -48,6 +48,7 @@ class FinService extends ChangeNotifier {
       0.0,
       (previousValue, income) => previousValue + income.amount,
     );
+    notifyListeners();
   }
 
   Future<List<IncomeModel>> getAllIncome(String uid) async {
@@ -66,6 +67,7 @@ class FinService extends ChangeNotifier {
       0.0,
       (previousValue, expense) => previousValue + expense.amount,
     );
+    notifyListeners();
   }
 
   Future<List<ExpenseModel>> getAllExpense(String uid) async {

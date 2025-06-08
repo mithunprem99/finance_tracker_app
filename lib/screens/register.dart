@@ -62,7 +62,7 @@ class _RegisterState extends State<Register> {
                         if (value!.isEmpty) {
                           return "Enter the email";
                         }
-                        if (!value.contains('@gmail.com')) {
+                        if (!value.contains('@')) {
                           return 'Enter the correct email format';
                         }
                       },
@@ -90,10 +90,13 @@ class _RegisterState extends State<Register> {
                     CustomTextFormFields(
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return 'Please enter the password';
+                          return 'Please re-enter the password';
                         }
                         if (value.length <= 6) {
                           return 'Enter the password with minimum length of 6';
+                        }
+                        if(_passwordController.text != _confirmPasswordController.text){
+                          return "Password mis-match";
                         }
                       },
                       textEditingController: _confirmPasswordController,
@@ -114,6 +117,7 @@ class _RegisterState extends State<Register> {
                       hintText: "Enter the phone number",
                       obscureText: false,
                       isPassword: false,
+                      
                     ),
                     SizedBox(height: 30),
                     CustomButton(
@@ -144,11 +148,7 @@ class _RegisterState extends State<Register> {
                             Navigator.pop(context);
                           }
                         }
-                        //login logic
-
-                        //get user fom hive
-
-                        //redirect user to home
+  
                       },
                       subject: "Register",
                     ),

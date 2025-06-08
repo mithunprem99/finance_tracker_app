@@ -90,6 +90,7 @@ final String? id = ModalRoute.of(context)?.settings.arguments as String?;
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: CustomTextFormFields(
+                 keyboardType: TextInputType.numberWithOptions(),
                  validator: (value){
                   if (value == null || value.isEmpty){
                     return "Enter amount";

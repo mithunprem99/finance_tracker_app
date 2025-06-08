@@ -37,11 +37,15 @@ class _CustomTextFormFieldsState extends State<CustomTextFormFields> {
       style: Theme.of(context).textTheme.displaySmall,
       controller: widget.textEditingController,
       obscureText: _obscureText,
-      keyboardType:
-          widget.keyboardType ??
-          (widget.isPassword
-              ? TextInputType.visiblePassword
+     keyboardType: widget.keyboardType ??
+      (widget.isPassword
+          ? TextInputType.visiblePassword
+          : widget.hintText?.toLowerCase().contains("phone") == true
+              ? TextInputType.phone
               : TextInputType.emailAddress),
+  inputFormatters: widget.hintText?.toLowerCase().contains("phone") == true
+      ? [FilteringTextInputFormatter.digitsOnly]
+      : null,
       decoration: InputDecoration(
         hintText: widget.hintText,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),

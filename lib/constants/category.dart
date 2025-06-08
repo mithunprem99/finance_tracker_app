@@ -1,15 +1,16 @@
 final List<String> incomeCategories = [
   'Salary',
+  'Daily Wages',
   'Freelance',
-  'Business',
-  'Investment',
+  'Small Business',
+  'Side Hustle',
   'Rental Income',
-  'Interest',
-  'Gifts',
-  'Dividends',
-  'Cashback/Rewards',
+  'Interest from Bank',
+  'Agricultural Income',
+  'Government Schemes',
   'Others',
 ];
+
 
 final List<String> expenseCategories = [
   'Groceries',
